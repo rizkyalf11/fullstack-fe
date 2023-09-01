@@ -40,24 +40,28 @@ const Home = () => {
     <main>
       {JSON.stringify(data)}
       <section className='p-2'>
-        {nilai.map((n, i) => (
-          <div key={i} className='border-2 p-2 mb-2 rounded-md shadow-md'>
-            <h1>id: {n.id}</h1>
-            <h1>Mata Pelajaran: {n.mata_pelajaran}</h1>
-            <h1>Nilai: {n.nilai}</h1>
-            <Button 
-              colorSchema='red'
-              title='Delete'
-              onClick={() => {
-                setnilai((prev) => {
-                  return [
-                    ...prev.filter((e) => e.id != n.id)
-                  ]
-                })
-              }}
-            />
-          </div>
-        ))}
+        {nilai.length === 0 ? (
+          <p className='text-red-500'>Data tidak ditemukan</p>
+        ) : (
+          nilai.map((n, i) => (
+            <div key={i} className='border-2 p-2 mb-2 rounded-md shadow-md'>
+              <h1>id: {n.id}</h1>
+              <h1>Mata Pelajaran: {n.mata_pelajaran}</h1>
+              <h1>Nilai: {n.nilai}</h1>
+              <Button 
+                colorSchema='red'
+                title='Delete'
+                onClick={() => {
+                  setnilai((prev) => {
+                    return [
+                      ...prev.filter((e) => e.id != n.id)
+                    ]
+                  })
+                }}
+              />
+            </div>
+          ))
+        )}
       </section>
 
       <section className='p-2'>
