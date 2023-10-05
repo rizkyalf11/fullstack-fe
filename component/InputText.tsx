@@ -3,21 +3,30 @@ import clsx from "clsx";
 interface InputProps {
   isError?: boolean;
   messageError?: string;
-  value: string | number;
-  id: string;
+  id: string | number;
   name: string;
+  value: string | number | undefined;
 }
 
 const InputText: React.FC<
   InputProps & React.InputHTMLAttributes<HTMLInputElement>
-> = ({ messageError, isError = false, value, ...props }) => {
+> = ({
+  messageError = "wajib di isi",
+  isError = false,
+  id,
+  name,
+  value,
+  ...props
+}) => {
   return (
     <section>
       <input
-        // value={value}
-        className={clsx(`w-full h-8 border px-2`, {
-          'border-red-500': isError,
-          'border-blue-500': !isError
+        value={value}
+        id={id}
+        name={name}
+        className={clsx(`w-full h-8 border rounded px-2`, {
+          "border-red-500 border-2": isError,
+          "border-gray-700": !isError,
         })}
         {...props}
       />
