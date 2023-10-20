@@ -48,7 +48,7 @@ const Button: React.FC<
         "h-12": width === "md",
       })}
     >
-      {isLoading ? (
+      {!isLoading ? (
         title
       ) : (
         <ClipLoader

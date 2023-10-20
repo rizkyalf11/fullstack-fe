@@ -10,8 +10,9 @@ export interface BaseResponsePagination {
   message: string;
   pagination: {
     page: number;
-    limit: number;
+    // limit: number;
     pageSize: number;
     total: number;
+    totalPage: number;
   };
 }

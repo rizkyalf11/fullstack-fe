@@ -12,3 +12,10 @@ interface Book {
 export interface BookListResponse extends BaseResponsePagination {
   data: Book[];
 }
+
+export interface BookListFilter extends Partial<Book> {
+  from_year?: string;
+  to_year?: string;
+  page : number ,
+  pageSize : number
+} 

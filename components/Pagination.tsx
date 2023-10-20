@@ -14,7 +14,7 @@ interface PaginationProps {
         page: number;
         pageSize: number;
         total: number;
-        total_page: number;
+        totalPage: number;
       }
     | undefined;
 }
@@ -76,6 +76,7 @@ export const Pagination: React.FC<PaginationProps> = ({
       pages: pages,
     };
   }
+  
   let pages = getPage(
     pagination?.total || 0,
     pagination?.page || 1,
@@ -97,6 +98,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           <option value={50}>50</option>
           <option value={100}>100</option>
         </select>
+        <p>dari {pagination?.total} data</p>
       </div>
 
       <div className="items-center hidden md:flex gap-x-3">
