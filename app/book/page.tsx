@@ -13,12 +13,12 @@ const BookPage = () => {
 	const { useBookList } = useBookModule();
 
 	const { data, isFetching, isLoading, params, handlePage, handlePageSize, setParams, handleClear, handleFilter } = useBookList()
-	console.log(params)
 
 	const { isOpen, onClose, onOpen } = useClosure()
 
 	return (
 		<>
+		{JSON.stringify(params)}
 		<Drawer title='Filter Buku' isOpen={isOpen} onClose={onClose} onClear={handleClear} onSubmit={handleFilter} >
 			<Filter params={params} setParams={setParams} />
 		</Drawer>

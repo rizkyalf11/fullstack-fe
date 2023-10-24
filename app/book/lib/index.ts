@@ -6,7 +6,11 @@ import { ChangeEvent, useState } from "react";
 const useBookModule = () => {
   const defaultParams = {
     page: 1,
-    pageSize: 10
+    pageSize: 10,
+    title: "",
+    author: "",
+    from_year: "",
+    to_year: ""
   }
 
   // Get List
@@ -19,7 +23,13 @@ const useBookModule = () => {
     let [filterParams, setFilterParams] = useState<BookListFilter>(defaultParams)
 
     const handleFilter = () => {
-      setFilterParams({ ...params });
+      setFilterParams({ ...params, page: 1 });
+      setParams((prevParams) => {
+        return {
+          ...prevParams,
+          page: 1
+        }
+      })
     };
 
     const handleClear = () => {
