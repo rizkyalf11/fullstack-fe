@@ -31,7 +31,6 @@ export const Drawer: React.FC<DrawerProps> = ({
     <animated.div
       style={{
         height: "100vh",
-
         right: 0,
         position: "absolute",
         zIndex: 50,

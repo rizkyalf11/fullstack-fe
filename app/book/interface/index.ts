@@ -19,3 +19,21 @@ export interface BookListFilter extends Partial<Book> {
   page : number ,
   pageSize : number
 } 
+
+export interface BookCreatePayload extends Pick<Book, "author" | "title" | "year"> {}
+export interface BookUpdatePayload extends Pick<Book, "author" | "title" | "year" | "id"> {}
+export interface BookCreateArrayPayload {
+  data: BookCreatePayload[];
+}
+
+export interface BookCreateResponse {
+  status: string;
+  message: string;
+  data?: Book;
+}
+
+export interface BookDetail extends Book{}
+
+export interface BookDeleteArrayPayload {
+  delete: number[]
+}
