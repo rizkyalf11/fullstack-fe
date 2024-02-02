@@ -1,5 +1,5 @@
 import { ChangeEvent, Dispatch, ReactNode, SetStateAction, useState } from "react";
-import { BookListFilter } from "@/app/book/interface";
+import { BookListFilter } from "@/app/book/lib/interface";
 import InputText from "@/components/InputText";
 import Label from "@/components/Label";
 import Select from "@/components/Select";

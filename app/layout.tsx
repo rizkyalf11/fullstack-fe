@@ -2,8 +2,16 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import ReactQuery from '../components/ReactQuery'
+import NextAuthProvider from '@/components/NextAuthProvider'
+import { Session } from "next-auth";
+import { ReactNode } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
+
+interface NextAuthProps {
+  children: ReactNode;
+  session: Session | null | undefined;
+}
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -11,16 +19,16 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+  children, session
+}: NextAuthProps) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <ReactQuery>
-          {children}
-        </ReactQuery>
+      <body className={inter.className + 'px-4'}>
+        <NextAuthProvider session={session}>
+          <ReactQuery>
+            {children}
+          </ReactQuery>
+        </NextAuthProvider>
       </body>
     </html>
   )
