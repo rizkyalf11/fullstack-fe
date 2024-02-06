@@ -84,7 +84,7 @@ const useAuthModule = () => {
           })
           toastSuccess(response.message);
           console.log()
-          // router.push("/admin");
+          router.push("/admin");
         },
         onError: (error: any) => {
           if (error.response.status == 422) {

@@ -1,27 +1,24 @@
-"use client"
-import Button from '@/components/Button';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation'
-import React from 'react'
+"use client";
+import React from "react";
+import { useSession, signOut } from "next-auth/react";
+import Button from "@/components/Button";
 
-const AdminPage = () => {
-  const router = useRouter();
-  const { data: session } = useSession();
-
-  console.log('session', session);
+const Page = () => {
+  const { data: session, status } = useSession();
   return (
     <div>
-      <p>Halaman Admin</p>
-
-      <Button 
-        title='logout'
-        colorSchema='red'
+      Admin
+      {JSON.stringify(session)}
+      {status}
+      <Button
+        title="Logout"
+        colorSchema="red"
         onClick={() => {
-          router.push('login')
+          signOut();
         }}
       />
     </div>
-  )
-}
+  );
+};
 
-export default AdminPage
+export default Page;

@@ -9,6 +9,9 @@ import Label from "@/components/Label";
 import Button from "@/components/Button";
 import useAuthModule from "../lib";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export const registerSchema = yup.object().shape({
   email: yup
@@ -37,6 +40,15 @@ const Login = () => {
     },
   });
   const { handleChange, handleSubmit, handleBlur, values, errors } = formik;
+
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (session) {
+      router.push('/admin');
+    }
+  }, [session, router]);
 
   return (
     <section>
