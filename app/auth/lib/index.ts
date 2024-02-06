@@ -1,14 +1,17 @@
-import { axiosClient } from "@/lib/axiosClient"
-import { LoginPayload, LoginResponse, RegisterPayload, RegisterRespose } from "../interface"
-import { useMutation } from "@tanstack/react-query";
+import { BaseResponseSuccess, axiosClient } from "@/lib/axiosClient"
+import { LoginPayload, LoginResponse, LupaPwPayload, ProfileResponse, RegisterPayload, RegisterRespose, ResetPwPayload } from "../interface"
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hook/useToast";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import useAxiosAuth from "@/hook/useAxiosAuth";
 
 const useAuthModule = () => {
   const router = useRouter();
   const { toastError, toastSuccess, toastWarning } = useToast();
+  const axiosAuthClient = useAxiosAuth()
+  const { data: session } = useSession()
 
   // register
   const register = async (payload: RegisterPayload): Promise<RegisterRespose> => {
@@ -39,7 +42,7 @@ const useAuthModule = () => {
       {
         onSuccess: (res) => {
           toastSuccess(res.message);
-          router.push('/login')
+          router.push('/auth/login')
         },
         onMutate: () => {
           setErrValidate([]);
@@ -80,11 +83,11 @@ const useAuthModule = () => {
             email: response.data.email,
             accessToken: response.data.access_token,
             refreshToken: response.data.refresh_token,
-            redirect: false 
+            redirect: false ,
+            hehe: 'tes'
           })
           toastSuccess(response.message);
-          console.log()
-          // router.push("/admin");
+          router.push("/admin");
         },
         onError: (error: any) => {
           if (error.response.status == 422) {
@@ -99,10 +102,80 @@ const useAuthModule = () => {
   };
 
   // lupa pw
+  const lupaPw = async (payload: LupaPwPayload): Promise<BaseResponseSuccess> => {
+    return axiosClient.post("/auth/lupa-password", payload).then((res) => res.data);
+  };
+
+  const useLupaPw = () => {
+    const { mutate, isLoading } = useMutation(
+      (payload: LupaPwPayload) => lupaPw(payload),
+      {
+        onSuccess: (res) => {
+          toastSuccess(res.message);
+          router.push('/auth/login')
+        },
+        onError: (error: any) => {
+          if (error.response.status == 422) {
+            toastWarning(error.response.data.message);
+          } else {
+            toastError();
+          }
+        },
+      } 
+    );
+
+    return { mutate, isLoading }
+  }
+
 
   // reset pw
+  const resetPw = async (payload: ResetPwPayload, id: string, token: string): Promise<BaseResponseSuccess> => {
+    return axiosClient.post(`/auth/lupa-password/${id}/${token}`, payload).then((res) => res.data);
+  };
 
-  return { useRegister, useLogin }
+  const useResetPw = (id: string, token: string) => {
+    const { mutate, isLoading } = useMutation(
+      (payload: ResetPwPayload) => resetPw(payload, id, token),
+      {
+        onSuccess: (res) => {
+          toastSuccess(res.message);
+          router.push('/auth/login')
+        },
+        onError: (error: any) => {
+          if (error.response.status == 422) {
+            toastWarning(error.response.data.message);
+          } else {
+            toastError();
+          }
+        },
+      } 
+    );
+
+    return { mutate, isLoading }
+  }
+
+  // profile
+  const getProfile = async (): Promise<ProfileResponse> => {
+    return  axiosAuthClient.get("/auth/profile").then((res) => res.data);
+  };
+
+  const useProfile = () => {
+    const { data, isLoading, isFetching } = useQuery(
+      ["/auth/profile"],
+      () => getProfile(),
+      {
+        select: (response) => response,
+        staleTime: 1000 * 60 * 60,
+        refetchInterval: 1000 * 60 * 60,
+        refetchOnWindowFocus: false,
+        enabled : session?.user?.id !== undefined
+      }
+    );
+
+    return { data, isFetching, isLoading };
+  };
+
+  return { useRegister, useLogin, useProfile, useLupaPw, useResetPw }
 }
 
 export default useAuthModule

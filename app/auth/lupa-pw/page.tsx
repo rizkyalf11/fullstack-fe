@@ -3,34 +3,29 @@
 import { useFormik, Form, FormikProvider, getIn } from "formik";
 
 import * as yup from "yup";
-import { LoginPayload } from "../interface";
+import { LoginPayload, LupaPwPayload } from "../interface";
 import InputText from "@/components/InputText";
 import Label from "@/components/Label";
 import Button from "@/components/Button";
 import useAuthModule from "../lib";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-export const registerSchema = yup.object().shape({
+export const lupaPwSchema = yup.object().shape({
   email: yup
     .string()
     .nullable()
     .default("")
     .email("Gunakan format email")
     .required("Wajib isi"),
-  password: yup
-    .string()
-    .nullable()
-    .default("")
-    .required("Wajib isi")
-    .min(8, "Minimal 8 karakater"),
 });
 
-const Login = () => {
-  const { useLogin } = useAuthModule();
-  const { mutate, isLoading } = useLogin();
-  const formik = useFormik<LoginPayload>({
-    initialValues: registerSchema.getDefault(),
-    validationSchema: registerSchema,
+const LupaPw = ({ params }: any) => {
+  const { useLupaPw } = useAuthModule();
+  const { mutate, isLoading } = useLupaPw();
+  const formik = useFormik<LupaPwPayload>({
+    initialValues: lupaPwSchema.getDefault(),
+    validationSchema: lupaPwSchema,
     enableReinitialize: true,
     onSubmit: (payload) => {
       mutate(payload);
@@ -41,7 +36,7 @@ const Login = () => {
   return (
     <section>
       <div className="flex items-center justify-center w-full">
-        <h1 className="text-3xl text-blue-400">Login</h1>
+        <h1 className="text-3xl text-blue-400">Lupa Password</h1>
       </div>
       <FormikProvider value={formik}>
         <Form className="space-y-5" onSubmit={handleSubmit}>
@@ -59,30 +54,15 @@ const Login = () => {
             />
           </section>
           <section>
-            <Label htmlFor="password" title="Password" />
-
-            <InputText
-              value={values.password}
-              placeholder="**********"
-              id="password"
-              name="password"
-              type="password"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              isError={getIn(errors, "password")}
-              messageError={getIn(errors, "password")}
-            />
-          </section>
-          <section>
             <Button
               height="lg"
-              title="Login"
+              title="Send Email"
               colorSchema="blue"
               isLoading={isLoading}
               isDisabled={isLoading}
             />
-            <Link href={"register"}>
-              <Button title="Halaman Register" colorSchema="green" />
+            <Link href={"/auth/login"}>
+              <Button title="Back" colorSchema="green" />
             </Link>
           </section>
         </Form>
@@ -91,4 +71,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LupaPw;
