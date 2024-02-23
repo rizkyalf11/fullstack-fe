@@ -5,6 +5,7 @@ import ReactQuery from '../components/ReactQuery'
 import NextAuthProvider from '@/components/NextAuthProvider'
 import { Session } from "next-auth";
 import { ReactNode } from 'react'
+import LoadingPage from '@/components/LoadingPage'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -26,7 +27,9 @@ export default function RootLayout({
       <body className={inter.className + 'px-4'}>
         <NextAuthProvider session={session}>
           <ReactQuery>
-            {children}
+            <LoadingPage>
+              {children}
+            </LoadingPage>
           </ReactQuery>
         </NextAuthProvider>
       </body>

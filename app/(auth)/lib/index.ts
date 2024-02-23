@@ -1,5 +1,5 @@
-import { axiosClient } from "@/lib/axiosClient"
-import { LoginPayload, LoginResponse, RegisterPayload, RegisterRespose } from "../interface"
+import { BaseResponseSuccess, axiosClient } from "@/lib/axiosClient"
+import { LoginPayload, LoginResponse, LupaPwPayload, RegisterPayload, RegisterRespose, ResetPwPayload } from "../interface"
 import { useMutation } from "@tanstack/react-query";
 import { useToast } from "@/hook/useToast";
 import { useRouter } from "next/navigation";
@@ -77,14 +77,20 @@ const useAuthModule = () => {
           await signIn('credentials', { 
             id: response.data.id,
             name: response.data.nama,
+            role: response.data.role,
             email: response.data.email,
             accessToken: response.data.access_token,
             refreshToken: response.data.refresh_token,
             redirect: false 
           })
           toastSuccess(response.message);
-          console.log()
-          router.push("/admin");
+          if(response.data.role === 'admin') {
+            console.log('y')
+            return router.push('/admin')
+          } else {
+            console.log('y')
+            router.push("/siswa");
+          }
         },
         onError: (error: any) => {
           if (error.response.status == 422) {
@@ -99,10 +105,58 @@ const useAuthModule = () => {
   };
 
   // lupa pw
+  const lupaPw = async (payload: LupaPwPayload): Promise<BaseResponseSuccess> => {
+    return axiosClient.post("/auth/lupa-password", payload).then((res) => res.data);
+  };
+
+  const useLupaPw = () => {
+    const { mutate, isLoading } = useMutation(
+      (payload: LupaPwPayload) => lupaPw(payload),
+      {
+        onSuccess: (res) => {
+          toastSuccess(res.message);
+          router.push('/login')
+        },
+        onError: (error: any) => {
+          if (error.response.status == 422) {
+            toastWarning(error.response.data.message);
+          } else {
+            toastError();
+          }
+        },
+      } 
+    );
+
+    return { mutate, isLoading }
+  }
 
   // reset pw
+  const resetPw = async (payload: ResetPwPayload, id: string, token: string): Promise<BaseResponseSuccess> => {
+    return axiosClient.post(`/auth/lupa-password/${id}/${token}`, payload).then((res) => res.data);
+  };
 
-  return { useRegister, useLogin }
+  const useResetPw = (id: string, token: string) => {
+    const { mutate, isLoading } = useMutation(
+      (payload: ResetPwPayload) => resetPw(payload, id, token),
+      {
+        onSuccess: (res) => {
+          toastSuccess(res.message);
+          router.push('/login')
+        },
+        onError: (error: any) => {
+          if (error.response.status == 422) {
+            toastWarning(error.response.data.message);
+          } else {
+            toastError();
+          }
+        },
+      } 
+    );
+
+    return { mutate, isLoading }
+  }
+
+  return { useRegister, useLogin, useLupaPw, useResetPw }
 }
 
 export default useAuthModule

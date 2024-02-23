@@ -7,6 +7,7 @@ interface User {
   password: string;
   access_token: string;
   refresh_token: string;
+  role: string;
 }
 
 export interface RegisterPayload extends Pick<User, 'nama' | 'email' | 'password'> {}
@@ -18,3 +19,8 @@ export interface LoginResponse extends BaseResponseSuccess {
 }
 
 export interface LoginPayload extends Pick<User, "email" | "password"> {}
+
+export interface LupaPwPayload extends Pick<User, "email"> {}
+export interface ResetPwPayload {
+  new_password: string
+}

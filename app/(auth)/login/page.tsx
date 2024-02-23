@@ -9,9 +9,10 @@ import Label from "@/components/Label";
 import Button from "@/components/Button";
 import useAuthModule from "../lib";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import GoogleButton from 'react-google-button'
 
 export const registerSchema = yup.object().shape({
   email: yup
@@ -30,7 +31,10 @@ export const registerSchema = yup.object().shape({
 
 const Login = () => {
   const { useLogin } = useAuthModule();
+
+
   const { mutate, isLoading } = useLogin();
+
   const formik = useFormik<LoginPayload>({
     initialValues: registerSchema.getDefault(),
     validationSchema: registerSchema,
@@ -39,6 +43,7 @@ const Login = () => {
       mutate(payload);
     },
   });
+
   const { handleChange, handleSubmit, handleBlur, values, errors } = formik;
 
   const { data: session } = useSession();
@@ -46,7 +51,11 @@ const Login = () => {
 
   useEffect(() => {
     if (session) {
-      router.push('/admin');
+      if(session.user.role == 'admin') {
+        router.push('/admin');
+      } else {
+        router.push('/siswa');
+      }
     }
   }, [session, router]);
 
@@ -96,9 +105,15 @@ const Login = () => {
             <Link href={"register"}>
               <Button title="Halaman Register" colorSchema="green" />
             </Link>
+            <Link href={"lupa-pw"}>
+              <Button title="Lupa Password?" colorSchema="red" />
+            </Link>
           </section>
         </Form>
       </FormikProvider>
+      <section className="m-3">
+        <GoogleButton onClick={() => signIn('google', { role: 'siswa' })}/>
+      </section>
     </section>
   );
 };
