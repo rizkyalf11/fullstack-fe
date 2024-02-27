@@ -48,7 +48,7 @@ const LupaPw = ({ params }: { params: { id: string, token: string } }) => {
               placeholder="**********"
               id="new_password"
               name="new_password"
-              type="new_password"
+              type="text"
               onChange={(e) => {
                 handleChange(e)
               }}

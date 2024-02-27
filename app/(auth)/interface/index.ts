@@ -21,6 +21,7 @@ export interface LoginResponse extends BaseResponseSuccess {
 export interface LoginPayload extends Pick<User, "email" | "password"> {}
 
 export interface LupaPwPayload extends Pick<User, "email"> {}
+
 export interface ResetPwPayload {
   new_password: string
 }

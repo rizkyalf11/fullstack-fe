@@ -13,8 +13,8 @@ export default withAuth (
 
     if(url.startsWith('/admin')) {
       if(role != 'admin') {
-        return NextResponse.rewrite(new URL('/notaccess', request.url));
-        // return NextResponse.redirect(new URL('/siswa', request.url));
+        // return NextResponse.rewrite(new URL('/notaccess', request.url));
+        return NextResponse.redirect(new URL('/siswa', request.url));
       } else {
         return NextResponse.next();
       }
