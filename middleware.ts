@@ -8,7 +8,7 @@ export default withAuth (
     let role = request?.nextauth?.token?.role;
     
     if(!role) {
-      role = 'admin'
+      role = '11'
     }
 
     if(url.startsWith('/admin')) {

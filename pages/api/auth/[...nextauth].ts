@@ -49,7 +49,10 @@ export const authOptions: NextAuthOptions = {
     async redirect({ url, baseUrl }) {
       return baseUrl
     },
-    async jwt({ token, user, account, profile }) {
+    async jwt({ token, user, account, session, trigger }) {
+      if(trigger == 'update') {
+        return { ...token, ...session.user }
+      }
 
       return {
         ...token,
@@ -70,6 +73,7 @@ export const authOptions: NextAuthOptions = {
 
         return session
       } else {
+        console.log('cre')
         session.user.id = Number(token.id);
         session.user.name = token.name;
         session.user.email = token.email;

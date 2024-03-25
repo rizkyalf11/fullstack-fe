@@ -9,9 +9,11 @@ const Home = () => {
     <main>
       {JSON.stringify(session)}
       <h1>Hello World</h1>
-      <button onClick={() => signOut({redirect: false}).then(() => {
-        router.push('/login')
-      })}>logout</button>
+      {!!session && (
+        <button onClick={() => signOut({redirect: false}).then(() => {
+          router.push('/login')
+        })}>logout</button>
+      )}
     </main>
   );
 };
